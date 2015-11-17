@@ -1,4 +1,5 @@
-﻿using Autodesk.AutoCAD.ApplicationServices;
+﻿using AutoCAD_PIK_Manager;
+using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Runtime;
@@ -13,6 +14,7 @@ namespace GP_LineParking
       [CommandMethod("PIK", "GP-LineParking", CommandFlags.Modal)]
       public void LineParkingCommand()
       {
+         Log.Info("Start Command GP-LineParking");
          // рисование линии парковки
          Document doc = Application.DocumentManager.MdiActiveDocument;
          if (doc == null) return;
