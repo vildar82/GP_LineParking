@@ -1,35 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using AcadLib.Files;
-using AutoCAD_PIK_Manager;
 
 namespace GP_LineParking.Model.LineParking
 {
    [Serializable]
    public class LineParkingOptions
    {
-      private static LineParkingOptions _instance;
       private static readonly string fileOptions = Path.Combine(
          AutoCAD_PIK_Manager.Settings.PikSettings.ServerShareSettingsFolder, "ГП\\LineParking.xml");
-      private double _parkingWidth;
+
+      private static LineParkingOptions _instance;
       private double _parkingLength;
-      private string  _parkingLineLayer;
+      private string _parkingLineLayer;
+      private double _parkingWidth;
 
       private LineParkingOptions()
       {
-
       }
 
-      public double ParkingWidth
+      public static LineParkingOptions Instance
       {
-         get { return _parkingWidth; }
-         set { _parkingWidth = value; }
+         get
+         {
+            if (_instance == null)
+            {
+               _instance = load();
+            }
+            return _instance;
+         }
       }
+
       public double ParkingLength
       {
          get { return _parkingLength; }
@@ -42,48 +43,10 @@ namespace GP_LineParking.Model.LineParking
          set { _parkingLineLayer = value; }
       }
 
-      public static LineParkingOptions Instance
+      public double ParkingWidth
       {
-         get
-         {
-            if(_instance == null)
-            {
-               _instance = load();
-            }
-            return _instance;
-         }
-      }
-
-      private static LineParkingOptions load()
-      {
-         LineParkingOptions options = null;
-         // загрузка из файла настроек         
-         if (File.Exists(fileOptions))
-         {
-            SerializerXml xmlSer = new SerializerXml(fileOptions);
-            try
-            {
-               options = xmlSer.DeserializeXmlFile<LineParkingOptions>();
-               if (options != null)
-               {
-                  return options;
-               }
-            }
-            catch (Exception ex)
-            {
-               Log.Error(ex, "Не удалось десериализовать настройки из файла {0}", fileOptions);
-            }
-         }
-         return defaultOptions();
-      }
-
-      private static LineParkingOptions defaultOptions()
-      {
-         LineParkingOptions options = new LineParkingOptions ();
-         options.ParkingLength = 5.5;
-         options.ParkingWidth = 2.5;
-         options.ParkingLineLayer = "";         
-         return options;      
+         get { return _parkingWidth; }
+         set { _parkingWidth = value; }
       }
 
       public static void Save()
@@ -101,6 +64,38 @@ namespace GP_LineParking.Model.LineParking
          {
             Log.Error(ex, "Не удалось сериализовать настройки в {0}", fileOptions);
          }
+      }
+
+      private static LineParkingOptions defaultOptions()
+      {
+         LineParkingOptions options = new LineParkingOptions();
+         options.ParkingLength = 5.5;
+         options.ParkingWidth = 2.5;
+         options.ParkingLineLayer = "";
+         return options;
+      }
+
+      private static LineParkingOptions load()
+      {
+         LineParkingOptions options = null;
+         // загрузка из файла настроек
+         if (File.Exists(fileOptions))
+         {
+            SerializerXml xmlSer = new SerializerXml(fileOptions);
+            try
+            {
+               options = xmlSer.DeserializeXmlFile<LineParkingOptions>();
+               if (options != null)
+               {
+                  return options;
+               }
+            }
+            catch (Exception ex)
+            {
+               Log.Error(ex, "Не удалось десериализовать настройки из файла {0}", fileOptions);
+            }
+         }
+         return defaultOptions();
       }
    }
 }

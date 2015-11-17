@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
@@ -12,13 +8,13 @@ using Autodesk.AutoCAD.GraphicsInterface;
 namespace GP_LineParking.Model.LineParking
 {
    public class JigLineParking : DrawJig
-   {      
+   {
+      private double _equalPoint = Tolerance.Global.EqualPoint;
+      private List<Line> _lines;
+      private double _parkingLength;
+      private double _parkingWidth;
       private Point3d _ptFirst;
       private Point3d _ptLast;
-      private double _parkingWidth;
-      private double _parkingLength;
-      private List<Line> _lines;
-      private double _equalPoint = Tolerance.Global.EqualPoint;
 
       public JigLineParking(Point3d ptFirst, double parkingWidth, double parkingLength)
       {
@@ -27,26 +23,12 @@ namespace GP_LineParking.Model.LineParking
          _ptFirst = ptFirst;
       }
 
-      ~JigLineParking() { }      
-      
-      public Matrix3d UCS { get { return Application.DocumentManager.MdiActiveDocument.Editor.CurrentUserCoordinateSystem; } }
+      ~JigLineParking()
+      {
+      }
 
       public List<Line> Lines { get { return _lines; } }
-
-      protected override bool WorldDraw(WorldDraw draw)
-      {
-         WorldGeometry geo = draw.Geometry;
-         if (geo != null)
-         {
-            // Отрисовка линий.            
-            _lines = getLines();
-            foreach (var line in _lines)
-            {               
-               geo.Draw(line);
-            }                       
-         }
-         return true;
-      }      
+      public Matrix3d UCS { get { return Application.DocumentManager.MdiActiveDocument.Editor.CurrentUserCoordinateSystem; } }
 
       protected override SamplerStatus Sampler(JigPrompts prompts)
       {
@@ -64,7 +46,7 @@ namespace GP_LineParking.Model.LineParking
          else
          {
             var ptNew = prRes.Value.TransformBy(UCS);
-            if (_ptLast.DistanceTo(ptNew)<= _equalPoint)
+            if (_ptLast.DistanceTo(ptNew) <= _equalPoint)
             {
                state = SamplerStatus.NoChange;
             }
@@ -72,9 +54,24 @@ namespace GP_LineParking.Model.LineParking
             {
                _ptLast = ptNew;
                state = SamplerStatus.OK;
-            }            
+            }
          }
          return state;
+      }
+
+      protected override bool WorldDraw(WorldDraw draw)
+      {
+         WorldGeometry geo = draw.Geometry;
+         if (geo != null)
+         {
+            // Отрисовка линий.
+            _lines = getLines();
+            foreach (var line in _lines)
+            {
+               geo.Draw(line);
+            }
+         }
+         return true;
       }
 
       private List<Line> getLines()
@@ -111,5 +108,3 @@ namespace GP_LineParking.Model.LineParking
       }
    }
 }
-
-

@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GP_LineParking.Model.LineParking
 {
    public partial class FormOptions : Form
    {
-      LineParkingOptions _opt;
+      private LineParkingOptions _opt;
 
       public FormOptions(LineParkingOptions opt)
       {
@@ -23,28 +16,23 @@ namespace GP_LineParking.Model.LineParking
          textBoxWidth.Text = opt.ParkingWidth.ToString();
       }
 
-      private void textBox_KeyPress(object sender, KeyPressEventArgs e)
-      {
-         if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-             (e.KeyChar != '.'))
-         {
-            e.Handled = true;
-         }
-
-         // only allow one decimal point
-         if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
-         {
-            e.Handled = true;
-         }
-      }
-
       private void buttonOk_Click(object sender, EventArgs e)
       {
          errorProvider1.Clear();
          if (!checkValues())
          {
             DialogResult = DialogResult.None;
-         }         
+         }
+      }
+
+      private bool checkDouble(TextBox textBox, out double dvalue)
+      {
+         if (!double.TryParse(textBox.Text, out dvalue))
+         {
+            errorProvider1.SetError(textBox, "Должно быть число");
+            return false;
+         }
+         return true;
       }
 
       private bool checkValues()
@@ -73,19 +61,24 @@ namespace GP_LineParking.Model.LineParking
          {
             errorProvider1.SetError(textBoxLayer, "Недопустимое имя слоя");
             res = false;
-         }         
+         }
 
          return res;
       }
 
-      private bool checkDouble(TextBox textBox, out double dvalue)
-      {         
-         if (!double.TryParse(textBox.Text, out dvalue))
+      private void textBox_KeyPress(object sender, KeyPressEventArgs e)
+      {
+         if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
+             (e.KeyChar != '.'))
          {
-            errorProvider1.SetError(textBox, "Должно быть число");
-            return false;
+            e.Handled = true;
          }
-         return true;
+
+         // only allow one decimal point
+         if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+         {
+            e.Handled = true;
+         }
       }
    }
 }
