@@ -52,17 +52,23 @@ namespace GP_LineParking.Model.LineParking
             _opt.ParkingWidth = dvalue;
          }
          // проверка имени слоя
-         res = textBoxLayer.Text.IsValidDbSymbolName();
-         if (res)
+         if (!string.IsNullOrEmpty(textBoxLayer.Text))
          {
-            _opt.ParkingLineLayer = textBoxLayer.Text;
+            res = textBoxLayer.Text.IsValidDbSymbolName();
+            if (res)
+            {
+               _opt.ParkingLineLayer = textBoxLayer.Text;
+            }
+            else
+            {
+               errorProvider1.SetError(textBoxLayer, "Недопустимое имя слоя");
+               res = false;
+            }
          }
          else
          {
-            errorProvider1.SetError(textBoxLayer, "Недопустимое имя слоя");
-            res = false;
+            _opt.ParkingLineLayer = string.Empty;
          }
-
          return res;
       }
 
