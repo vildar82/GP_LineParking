@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
@@ -10,16 +11,14 @@ namespace GP_LineParking.Model.LineParking
    public class JigLineParking : DrawJig
    {
       private double _equalPoint = Tolerance.Global.EqualPoint;
-      private List<Line> _lines;
-      private double _parkingLength;
-      private double _parkingWidth;
+      private List<Line> _lines;      
       private Point3d _ptFirst;
       private Point3d _ptLast;
+      private LineParkingOptions _options;
 
-      public JigLineParking(Point3d ptFirst, double parkingWidth, double parkingLength)
+      public JigLineParking(Point3d ptFirst, LineParkingOptions options)
       {
-         _parkingLength = parkingLength;
-         _parkingWidth = parkingWidth;
+         _options = options;
          _ptFirst = ptFirst;
       }
 
@@ -85,26 +84,31 @@ namespace GP_LineParking.Model.LineParking
          var vec = _ptLast - _ptFirst;
          var remainLen = vec.Length;
          var vecNormal = vec.GetNormal();
-         var vecPer = vecNormal.GetPerpendicularVector();
-
+         var gragAngleParking = (180-_options.ParkingAngle) * (Math.PI / 180);
+         var vecParking = vecNormal.RotateBy(gragAngleParking, Vector3d.ZAxis);
          var ptParkingStart = _ptFirst;
-
          // первая линия парковки
-         Point3d ptEndFirstLineParking = ptParkingStart + vecPer * _parkingLength;
+         Point3d ptEndFirstLineParking = ptParkingStart + vecParking * _options.ParkingLength;
          Line firstLineParking = new Line(ptParkingStart, ptEndFirstLineParking);
          lines.Add(firstLineParking);
-
+         // вторая линия парковки
+         Point3d ptEndSecondLineParking = ptEndFirstLineParking - vecParking.GetPerpendicularVector() * _options.ParkingWidth;
+         double widthBase = _options.ParkingWidth / (Math.Sin(gragAngleParking));
+         ptParkingStart = ptParkingStart + vecNormal * widthBase;
+         Line secondLineParking = new Line(ptParkingStart, ptEndSecondLineParking);
+         lines.Add(secondLineParking);
+         remainLen -= widthBase;
          // последующии линии парковки
-         while (remainLen >= _parkingWidth)
+         while (remainLen >= _options.ParkingWidth)
          {
-            ptParkingStart = ptParkingStart + vecNormal * _parkingWidth;
-            Point3d ptEndSecondLineParking = ptParkingStart + vecPer * _parkingLength;
-            Line secondLineParking = new Line(ptParkingStart, ptEndSecondLineParking);
-            lines.Add(secondLineParking);
+            ptParkingStart = ptParkingStart + vecNormal * widthBase;
+            ptEndSecondLineParking = ptEndSecondLineParking + vecNormal * widthBase;
+            Line nextLineParking = new Line(ptParkingStart, ptEndSecondLineParking);
+            lines.Add(nextLineParking);
 
-            remainLen -= _parkingWidth;
+            remainLen -= widthBase;
          }
-         return lines;
+         return lines;         
       }
    }
 }

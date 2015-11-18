@@ -39,13 +39,15 @@
          this.textBoxLayer = new System.Windows.Forms.TextBox();
          this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
          this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+         this.label4 = new System.Windows.Forms.Label();
+         this.textBoxAngle = new System.Windows.Forms.TextBox();
          ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
          this.SuspendLayout();
          // 
          // buttonCancel
          // 
          this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.buttonCancel.Location = new System.Drawing.Point(192, 131);
+         this.buttonCancel.Location = new System.Drawing.Point(195, 162);
          this.buttonCancel.Name = "buttonCancel";
          this.buttonCancel.Size = new System.Drawing.Size(75, 23);
          this.buttonCancel.TabIndex = 0;
@@ -55,7 +57,7 @@
          // buttonOk
          // 
          this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-         this.buttonOk.Location = new System.Drawing.Point(111, 131);
+         this.buttonOk.Location = new System.Drawing.Point(114, 162);
          this.buttonOk.Name = "buttonOk";
          this.buttonOk.Size = new System.Drawing.Size(75, 23);
          this.buttonOk.TabIndex = 0;
@@ -66,7 +68,7 @@
          // label1
          // 
          this.label1.AutoSize = true;
-         this.label1.Location = new System.Drawing.Point(12, 15);
+         this.label1.Location = new System.Drawing.Point(11, 15);
          this.label1.Name = "label1";
          this.label1.Size = new System.Drawing.Size(153, 13);
          this.label1.TabIndex = 1;
@@ -84,7 +86,7 @@
          // label2
          // 
          this.label2.AutoSize = true;
-         this.label2.Location = new System.Drawing.Point(12, 47);
+         this.label2.Location = new System.Drawing.Point(12, 45);
          this.label2.Name = "label2";
          this.label2.Size = new System.Drawing.Size(147, 13);
          this.label2.TabIndex = 1;
@@ -92,7 +94,7 @@
          // 
          // textBoxLength
          // 
-         this.textBoxLength.Location = new System.Drawing.Point(171, 44);
+         this.textBoxLength.Location = new System.Drawing.Point(171, 42);
          this.textBoxLength.Name = "textBoxLength";
          this.textBoxLength.Size = new System.Drawing.Size(100, 20);
          this.textBoxLength.TabIndex = 2;
@@ -102,7 +104,7 @@
          // label3
          // 
          this.label3.AutoSize = true;
-         this.label3.Location = new System.Drawing.Point(12, 83);
+         this.label3.Location = new System.Drawing.Point(11, 105);
          this.label3.Name = "label3";
          this.label3.Size = new System.Drawing.Size(137, 13);
          this.label3.TabIndex = 1;
@@ -110,7 +112,7 @@
          // 
          // textBoxLayer
          // 
-         this.textBoxLayer.Location = new System.Drawing.Point(171, 80);
+         this.textBoxLayer.Location = new System.Drawing.Point(170, 102);
          this.textBoxLayer.Name = "textBoxLayer";
          this.textBoxLayer.Size = new System.Drawing.Size(100, 20);
          this.textBoxLayer.TabIndex = 2;
@@ -120,23 +122,51 @@
          // 
          this.errorProvider1.ContainerControl = this;
          // 
+         // label4
+         // 
+         this.label4.AutoSize = true;
+         this.label4.Location = new System.Drawing.Point(11, 75);
+         this.label4.Name = "label4";
+         this.label4.Size = new System.Drawing.Size(101, 13);
+         this.label4.TabIndex = 1;
+         this.label4.Text = "Парковочный угол";
+         // 
+         // textBoxAngle
+         // 
+         this.textBoxAngle.Location = new System.Drawing.Point(171, 72);
+         this.textBoxAngle.Name = "textBoxAngle";
+         this.textBoxAngle.Size = new System.Drawing.Size(100, 20);
+         this.textBoxAngle.TabIndex = 2;
+         this.textBoxAngle.Text = "90";
+         this.textBoxAngle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
+         // 
          // FormOptions
          // 
          this.AcceptButton = this.buttonOk;
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.CancelButton = this.buttonCancel;
-         this.ClientSize = new System.Drawing.Size(282, 166);
+         this.ClientSize = new System.Drawing.Size(282, 197);
+         this.ControlBox = false;
          this.Controls.Add(this.textBoxLayer);
+         this.Controls.Add(this.textBoxAngle);
          this.Controls.Add(this.textBoxLength);
          this.Controls.Add(this.label3);
+         this.Controls.Add(this.label4);
          this.Controls.Add(this.textBoxWidth);
          this.Controls.Add(this.label2);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.buttonOk);
          this.Controls.Add(this.buttonCancel);
+         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+         this.MaximizeBox = false;
+         this.MinimizeBox = false;
          this.Name = "FormOptions";
+         this.ShowIcon = false;
+         this.ShowInTaskbar = false;
+         this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
          this.Text = "FormOptions";
+         this.TopMost = true;
          ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
          this.ResumeLayout(false);
          this.PerformLayout();
@@ -155,5 +185,7 @@
       private System.Windows.Forms.TextBox textBoxLayer;
       private System.Windows.Forms.ToolTip toolTip1;
       private System.Windows.Forms.ErrorProvider errorProvider1;
+      private System.Windows.Forms.TextBox textBoxAngle;
+      private System.Windows.Forms.Label label4;
    }
 }

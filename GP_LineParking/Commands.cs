@@ -29,7 +29,7 @@ namespace GP_LineParking
          {
             checkLayer(db);
             JigLineParking jigLineParking = new JigLineParking(resFirstPt.Value.TransformBy(ed.CurrentUserCoordinateSystem),
-               LineParkingOptions.Instance.ParkingWidth, LineParkingOptions.Instance.ParkingLength);
+                                             LineParkingOptions.Instance);
             var jigRes = ed.Drag(jigLineParking);
             if (jigRes.Status == PromptStatus.OK && jigLineParking.Lines.Count > 0)
             {

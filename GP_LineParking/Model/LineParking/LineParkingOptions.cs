@@ -14,6 +14,7 @@ namespace GP_LineParking.Model.LineParking
       private double _parkingLength;
       private string _parkingLineLayer;
       private double _parkingWidth;
+      private double _parkingAngle;
 
       private LineParkingOptions()
       {
@@ -49,6 +50,12 @@ namespace GP_LineParking.Model.LineParking
          set { _parkingWidth = value; }
       }
 
+      public double ParkingAngle
+      {
+         get { return _parkingAngle; }
+         set { _parkingAngle = value; }
+      }
+
       public static void Save()
       {
          try
@@ -72,6 +79,7 @@ namespace GP_LineParking.Model.LineParking
          options.ParkingLength = 5.5;
          options.ParkingWidth = 2.5;
          options.ParkingLineLayer = "";
+         options.ParkingAngle = 90;
          return options;
       }
 
@@ -87,6 +95,7 @@ namespace GP_LineParking.Model.LineParking
                options = xmlSer.DeserializeXmlFile<LineParkingOptions>();
                if (options != null)
                {
+                  options.checkValues();
                   return options;
                }
             }
@@ -96,6 +105,41 @@ namespace GP_LineParking.Model.LineParking
             }
          }
          return defaultOptions();
+      }
+
+      private void checkValues()
+      {
+         if (!CheckAngle(ParkingAngle))
+         {
+            ParkingAngle = 90;
+         }
+         if (!CheckLen(ParkingLength))
+         {
+            ParkingLength = 5.5;
+         }
+         if (!CheckLen(ParkingWidth))
+         {
+            ParkingWidth = 2.5;
+         }
+         if (!CheckLayer(ParkingLineLayer))
+         {
+            ParkingLineLayer = ParkingLineLayer.GetValidDbSymbolName();
+         }
+      }
+
+      public static bool CheckAngle(double angle)
+      {
+         return angle > 0 && angle <= 90;         
+      }
+
+      public static  bool CheckLen(double len)
+      {
+         return len > 0;
+      }
+
+      public static bool CheckLayer(string layer)
+      {
+         return layer.IsValidDbSymbolName();
       }
    }
 }
