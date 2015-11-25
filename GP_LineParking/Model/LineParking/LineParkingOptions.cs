@@ -139,6 +139,10 @@ namespace GP_LineParking.Model.LineParking
 
       public static bool CheckLayer(string layer)
       {
+         if(string.IsNullOrEmpty (layer))
+         {
+            return true;
+         }
          return layer.IsValidDbSymbolName();
       }
    }
